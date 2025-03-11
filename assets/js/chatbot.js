@@ -1,7 +1,8 @@
 jQuery(document).ready(function($) {
     // Chatbot UI elements
     const $chatbot = $('#ai-recommender-chatbot');
-    const $chatbotToggle = $('.ai-recommender-toggle');
+    const $chatbotClose = $('.ai-recommender-toggle');
+    const $chatbotToggle = $('#nxt_open');
     const $chatbotInput = $('.ai-recommender-input');
     const $chatbotSend = $('.ai-recommender-send');
     const $chatbotMessages = $('.ai-recommender-messages');
@@ -19,6 +20,11 @@ jQuery(document).ready(function($) {
     // Toggle chatbot visibility
     $chatbotToggle.on('click', function() {
         $chatbot.toggleClass('ai-recommender-minimized');
+        $chatbotToggle.toggleClass('ai-recommender-minimized');
+    });
+    $chatbotClose.on('click', function() {
+        $chatbot.toggleClass('ai-recommender-minimized');
+        $chatbotToggle.toggleClass('ai-recommender-minimized');
     });
     
     // Send message when clicking send button
@@ -195,7 +201,7 @@ jQuery(document).ready(function($) {
             $product.append('<img src="' + product.image + '" alt="' + product.name + '">');
             $product.append('<h4>' + product.name + '</h4>');
             $product.append('<div class="ai-recommender-price">' + product.price + '</div>');
-            $product.append('<a href="' + product.url + '" class="ai-recommender-product-link">View Product</a>');
+            $product.append('<a href="' + product.url + '" class="ai-recommender-product-link" target="_blank">View Product</a>');
             
             $productsContainer.append($product);
         });
