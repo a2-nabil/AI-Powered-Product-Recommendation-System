@@ -88,8 +88,8 @@ class AI_Product_Recommender
 
         // Pass variables to JavaScript
         $options = get_option('ai_recommender_options', array());
-        $chatbot_title = isset($options['chatbot_title']) ? $options['chatbot_title'] : 'AI Product Assistant';
-        $welcome_message = isset($options['welcome_message']) ? $options['welcome_message'] : 'Hello! I\'m your AI product assistant. I can help you find products or answer questions about our store.';
+        $chatbot_title = isset($options['chatbot_title']) ? $options['chatbot_title'] : 'AI Personal Assistant';
+        $welcome_message = isset($options['welcome_message']) ? $options['welcome_message'] : 'Hello! I\'m your AI assistant. I can help you find products or answer questions about our store.';
 
         wp_localize_script('ai-recommender-script', 'aiRecommender', array(
             'ajax_url' => admin_url('admin-ajax.php'),
