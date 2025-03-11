@@ -6,6 +6,15 @@ jQuery(document).ready(function($) {
     const $chatbotSend = $('.ai-recommender-send');
     const $chatbotMessages = $('.ai-recommender-messages');
     const $chatbotUpload = $('.ai-recommender-upload');
+    const $chatbotHeader = $('.ai-recommender-header h3');
+    
+    // Set chatbot title from settings
+    if (aiRecommender.chatbot_title) {
+        $chatbotHeader.text(aiRecommender.chatbot_title);
+    }
+    
+    // Store chat history
+    let chatHistory = [];
     
     // Toggle chatbot visibility
     $chatbotToggle.on('click', function() {
@@ -57,6 +66,12 @@ jQuery(document).ready(function($) {
         // Add user message to chat
         addMessage('user', message);
         
+        // Update chat history
+        chatHistory.push({
+            role: 'user',
+            content: message
+        });
+        
         // Clear input
         $chatbotInput.val('');
         
@@ -73,18 +88,30 @@ jQuery(document).ready(function($) {
                 xhr.setRequestHeader('X-WP-Nonce', aiRecommender.nonce);
             },
             data: {
-                message: message
+                message: message,
+                chat_history: chatHistory
             },
             success: function(response) {
                 // Remove thinking indicator
                 $thinking.remove();
                 
-                // Add AI response
-                addMessage('ai', response.response);
-                
-                // If products were suggested, display them
-                if (response.products && response.products.length > 0) {
-                    displayProducts(response.products);
+                if (response.success) {
+                    // Add AI response to chat history
+                    chatHistory.push({
+                        role: 'assistant',
+                        content: response.response
+                    });
+                    
+                    // Add AI response to chat
+                    addMessage('ai', response.response);
+                    
+                    // If products were suggested, display them
+                    if (response.products && response.products.length > 0) {
+                        displayProducts(response.products);
+                    }
+                } else {
+                    // Show error message
+                    addMessage('ai', response.response);
                 }
             },
             error: function() {
@@ -167,6 +194,7 @@ jQuery(document).ready(function($) {
             const $product = $('<div class="ai-recommender-product"></div>');
             $product.append('<img src="' + product.image + '" alt="' + product.name + '">');
             $product.append('<h4>' + product.name + '</h4>');
+            $product.append('<div class="ai-recommender-price">' + product.price + '</div>');
             $product.append('<a href="' + product.url + '" class="ai-recommender-product-link">View Product</a>');
             
             $productsContainer.append($product);
@@ -181,5 +209,9 @@ jQuery(document).ready(function($) {
     }
     
     // Initialize chatbot with a welcome message
-    addMessage('ai', 'Hello! I\'m your AI product assistant. I can help you find products or answer questions about our store. You can also upload an image to find similar products.');
+    if (aiRecommender.welcome_message) {
+        addMessage('ai', aiRecommender.welcome_message);
+    } else {
+        addMessage('ai', 'Hello! I\'m your AI product assistant. I can help you find products or answer questions about our store. You can also upload an image to find similar products.');
+    }
 });
