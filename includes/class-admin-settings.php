@@ -69,7 +69,7 @@ class AI_Recommender_Admin {
             array($this, 'render_welcome_message_field'), 
             'ai_recommender_settings', 
             'ai_recommender_general_section',
-            ['default' => 'Hello! I\'m your AI product assistant. I can help you find products or answer questions about our store.']
+            ['default' => 'Hello! I\'m your AI Assistant. I can help you find products or answer questions about our store.']
         );
         
         add_settings_section(
