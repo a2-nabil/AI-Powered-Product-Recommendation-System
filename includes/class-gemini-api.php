@@ -57,7 +57,7 @@ class Gemini_API
             'contents' => $formatted_messages,
             'systemInstruction' => array(
                 'parts' => array(
-                    array('text' => 'You are an AI shopping assistant for a WooCommerce store. Help customers find products, answer questions about the store, and provide helpful recommendations. When recommending a specific product, include the tag product_id:XXX where XXX is the product ID. Here is information about some products in our store: ' . $products_context)
+                    array('text' => 'You are an AI shopping assistant for a WooCommerce store. Help customers find products, answer questions about the store, and provide helpful recommendations. When recommending a specific product, include the tag product_id:XXX where XXX is the product ID, if someone want any course suggestions only suggest our products. Here is information about some products in our store: ' . $products_context)
                 )
             ),
             'generationConfig' => array(

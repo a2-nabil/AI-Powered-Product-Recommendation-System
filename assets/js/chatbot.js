@@ -213,13 +213,7 @@ jQuery(document).ready(function ($) {
     $message.append(
       '<div class="ai-recommender-avatar">' + avatarText + "</div>"
     );
-
-    console.log("test", message);
-     // Check if message contains formatted product recommendations
-     if (sender === 'ai' && message.includes('* **')) {
-        message = formatAIResponse(message); // Format AI response
-        console.log(message);
-    }
+    message = formatAIResponse(message);
 
     $message.append('<div class="ai-recommender-text">' + message + "</div>");
     $chatbotMessages.append($message);
@@ -229,29 +223,16 @@ jQuery(document).ready(function ($) {
   // Function to format AI response with product recommendations
   function formatAIResponse(response) {
     const lines = response.split("\n");
-    let mainMessage = "";
-    let recommendations = [];
+    let formattedMessage = "";
 
     lines.forEach((line) => {
-      if (line.startsWith("* **")) {
-        const match = line.match(/\*\*\s*(.*?)\s*\*\*:\s*product_id:(\d+)/);
-        if (match) {
-          recommendations.push({ name: match[1], id: match[2] });
-        }
-      } else {
-        mainMessage += line + " ";
-      }
+      let cleanedLine = line.replace(/\s*product_id:\d+/gi, "");
+      let formattedLine =
+        cleanedLine
+          .replace(/^\*\s?(.*)$/gm, "<li>$1</li>")
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") + "<br>";
+      formattedMessage += formattedLine;
     });
-
-    // Construct formatted output
-    let formattedMessage = `<p>${mainMessage.trim()}</p>`;
-    if (recommendations.length > 0) {
-      formattedMessage += `<ul>`;
-      recommendations.forEach((item) => {
-        formattedMessage += `<li><strong>${item.name}</strong> (ID: ${item.id})</li>`;
-      });
-      formattedMessage += `</ul>`;
-    }
 
     return formattedMessage;
   }
@@ -263,9 +244,21 @@ jQuery(document).ready(function ($) {
     products.forEach((product) => {
       const $product = $('<div class="ai-recommender-product"></div>');
       $product.append(
-        '<img src="' + product.image + '" alt="' + product.name + '">'
+        '<a href="' +
+          product.url +
+          '" class="ai-recommender-product-link" target="_blank"> <img src="' +
+          product.image +
+          '" alt="' +
+          product.name +
+          '"></a>'
       );
-      $product.append("<h4>" + product.name + "</h4>");
+      $product.append(
+        '<a href="' +
+          product.url +
+          '" target="_blank"><h4>' +
+          product.name +
+          "</h4></a>"
+      );
       $product.append(
         '<div class="ai-recommender-price">' + product.price + "</div>"
       );
